@@ -1,8 +1,9 @@
-const User = require("../models/user");
+const user = require("../models/user");
 const handleControllerError = require("../utils/handleControllerError");
 
 const getUsers = (req, res) => {
-  User.find({})
+  user
+    .find({})
     .then((users) => res.send(users))
     .catch((err) => handleControllerError(res, err));
 };
@@ -10,7 +11,8 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
   const { userId } = req.params;
 
-  User.findById(userId)
+  user
+    .findById(userId)
     .orFail()
     .then((user) => res.send(user))
     .catch((err) =>
@@ -24,7 +26,8 @@ const getUser = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar } = req.body;
 
-  User.create({ name, avatar })
+  user
+    .create({ name, avatar })
     .then((user) => res.status(201).send(user))
     .catch((err) =>
       handleControllerError(res, err, {
