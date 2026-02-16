@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
 const { NOT_FOUND_ERROR } = require("./utils/errors");
 
+const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
+
 const app = express();
 const { PORT = 3001 } = process.env;
 app.use(express.json());
@@ -14,21 +16,15 @@ app.use((req, res, next) => {
 });
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect(MONGO_URL)
   .then(() => {
-    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
+      console.log(`Server running on ${PORT}`);
+    });
   })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-  });
+  .catch(console.error);
 
 app.use("/", mainRouter);
 app.use((req, res) => {
-  res
-    .status(NOT_FOUND_ERROR)
-    .send({ message: "Requested resource not found" });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  res.status(NOT_FOUND_ERROR).send({ message: "Requested resource not found" });
 });
