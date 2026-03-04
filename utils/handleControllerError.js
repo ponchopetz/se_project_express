@@ -1,6 +1,7 @@
 const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
+  FORBIDDEN_ERROR,
   INTERNAL_SERVER_ERROR,
   UNAUTHORIZED_ERROR,
   CONFLICT_ERROR,
@@ -33,6 +34,13 @@ const handleControllerError = (res, err, messages = {}) => {
   if (err.name === "AuthError") {
     res.status(UNAUTHORIZED_ERROR).send({
       message: "Incorrect email or password",
+    });
+    return;
+  }
+
+  if (err.name === "ForbiddenError") {
+    res.status(FORBIDDEN_ERROR).send({
+      message: err.message,
     });
     return;
   }

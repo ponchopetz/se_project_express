@@ -79,13 +79,15 @@ const updateUser = (req, res) => {
     );
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send({
-      message: "Email and password are required",
-    });
+    return next(
+      Object.assign(new Error("Email and password are required"), {
+        name: "ValidationError",
+      })
+    );
   }
 
   return User.findUserByCredentials(email, password)

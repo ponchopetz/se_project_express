@@ -34,15 +34,17 @@ const createClothingItem = (req, res) => {
     );
 };
 
-const deleteClothingItem = (req, res) => {
+const deleteClothingItem = (req, res, next) => {
   const { itemId } = req.params;
 
   ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
       // Check ownership
-      if (item.owner.toString() !== req.user._id) {
-        return res.status(403).send({ message: "Forbidden" });
+      if (!item.owner.equals(req.user._id)) {
+        return next(
+          Object.assign(new Error("Forbidden"), { name: "ForbiddenError" })
+        );
       }
 
       return item.deleteOne().then(() => {

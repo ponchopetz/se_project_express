@@ -6,12 +6,14 @@ const isUrl = require("validator/lib/isURL");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: true,
     default: "Jacques Cousteau",
     minlength: 2,
     maxlength: 30,
   },
   avatar: {
     type: String,
+    required: true,
     default:
       "https://practicum-content.s3.us-west-1.amazonaws.com/resources/avatar_1604080799.jpg",
     validate: {
