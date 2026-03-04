@@ -79,14 +79,14 @@ const updateUser = (req, res) => {
     );
 };
 
-const login = (req, res, next) => {
+const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(
-      Object.assign(new Error("Email and password are required"), {
-        name: "ValidationError",
-      })
+    return handleControllerError(
+      res,
+      Object.assign(new Error(), { name: "ValidationError" }),
+      { validation: "Email and password are required" }
     );
   }
 

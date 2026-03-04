@@ -34,7 +34,7 @@ const createClothingItem = (req, res) => {
     );
 };
 
-const deleteClothingItem = (req, res, next) => {
+const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
   ClothingItem.findById(itemId)
@@ -42,7 +42,8 @@ const deleteClothingItem = (req, res, next) => {
     .then((item) => {
       // Check ownership
       if (!item.owner.equals(req.user._id)) {
-        return next(
+        return handleControllerError(
+          res,
           Object.assign(new Error("Forbidden"), { name: "ForbiddenError" })
         );
       }
