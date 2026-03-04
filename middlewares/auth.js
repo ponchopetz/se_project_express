@@ -1,14 +1,11 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../utils/config");
-const handleControllerError = require("../utils/handleControllerError");
 
 const handleAuthError = (res) => {
   res.status(401).send({ message: "Authorization required" });
 };
 
-const extractBearerToken = (header) => {
-  return header.replace("Bearer ", "");
-};
+const extractBearerToken = (header) => header.replace("Bearer ", "");
 
 const authMiddleware = (req, res, next) => {
   const { authorization } = req.headers;
@@ -27,7 +24,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   req.user = payload;
-  next();
+  return next();
 };
 
 module.exports = authMiddleware;
