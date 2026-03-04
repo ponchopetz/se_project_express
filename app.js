@@ -1,7 +1,7 @@
 const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
-const cors = require("cors");
 const { NOT_FOUND_ERROR } = require("./utils/errors");
 
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
