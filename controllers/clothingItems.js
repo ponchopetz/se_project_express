@@ -37,9 +37,18 @@ const createClothingItem = (req, res) => {
 const deleteClothingItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(itemId)
     .orFail()
-    .then((item) => res.send(item))
+    .then((item) => {
+      // Check ownership
+      if (item.owner.toString() !== req.user._id) {
+        return res.status(403).send({ message: "Forbidden" });
+      }
+
+      return item.deleteOne().then(() => {
+        res.send(item);
+      });
+    })
     .catch((err) =>
       handleControllerError(res, err, {
         notFound: "Item not found",

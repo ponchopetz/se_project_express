@@ -2,6 +2,8 @@ const {
   BAD_REQUEST_ERROR,
   NOT_FOUND_ERROR,
   INTERNAL_SERVER_ERROR,
+  UNAUTHORIZED_ERROR,
+  CONFLICT_ERROR,
 } = require("./errors");
 
 const handleControllerError = (res, err, messages = {}) => {
@@ -24,6 +26,20 @@ const handleControllerError = (res, err, messages = {}) => {
   if (err.name === "DocumentNotFoundError") {
     res.status(NOT_FOUND_ERROR).send({
       message: messages.notFound || "Requested resource not found",
+    });
+    return;
+  }
+
+  if (err.name === "AuthError") {
+    res.status(UNAUTHORIZED_ERROR).send({
+      message: "Incorrect email or password",
+    });
+    return;
+  }
+
+  if (err.code === 11000) {
+    res.status(CONFLICT_ERROR).send({
+      message: messages.conflict || "User with this email already exists",
     });
     return;
   }
