@@ -39,6 +39,11 @@ This project is a RESTful backend for the WTWR (What to Wear) application. It ma
   - `PUT /items/:itemId/likes`
   - `DELETE /items/:itemId/likes`
 
+## Project Pitch Video
+
+Check out [this video](https://www.loom.com/share/f1a3a3a7c6114a2195ba6cba20399667), where I describe my
+project and some challenges I faced while building it.
+
 ## Running the Project
 
 - `npm run start` — run the server
