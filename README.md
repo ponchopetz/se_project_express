@@ -1,8 +1,12 @@
 # WTWR (What to Wear): Back End
 
+## Related Repositories
+
+- **Frontend:** [se_project_react](https://github.com/ponchopetz/se_project_react)
+
 ## Project Overview
 
-This project is a RESTful backend for the WTWR (What to Wear) application. It manages users and clothing items stored in MongoDB through a Node.js and Express server. The API supports creating, reading, deleting items, and liking/unliking clothing items. Error responses are standardized as JSON, and the current sprint uses temporary middleware that sets `req.user._id` with a hardcoded test user ID.
+This project is a RESTful backend for the WTWR (What to Wear) application. It manages users and clothing items stored in MongoDB through a Node.js and Express server. The API supports creating, reading, deleting items, and liking/unliking clothing items. Error responses are standardized as JSON.
 
 ## Tech Stack & Tools
 

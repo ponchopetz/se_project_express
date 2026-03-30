@@ -7,20 +7,6 @@ const getItems = (req, res) => {
     .catch((err) => handleControllerError(res, err));
 };
 
-const getItem = (req, res) => {
-  const { itemId } = req.params;
-
-  ClothingItem.findById(itemId)
-    .orFail()
-    .then((item) => res.send(item))
-    .catch((err) =>
-      handleControllerError(res, err, {
-        notFound: "Item not found",
-        cast: "Invalid item ID",
-      })
-    );
-};
-
 const createClothingItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
@@ -94,7 +80,6 @@ const dislikeItem = (req, res) => {
 
 module.exports = {
   getItems,
-  getItem,
   createClothingItem,
   likeItem,
   dislikeItem,
