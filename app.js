@@ -1,3 +1,6 @@
+require("dotenv").config();
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -9,9 +12,17 @@ const { PORT = 3001 } = process.env;
 
 const app = express();
 
-// Middleware
-app.use(express.json());
+//Middlewares
+app.use(helmet());
 app.use(cors());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests, please try again later.",
+});
+app.use(limiter);
+
+app.use(express.json());
 
 // Routes
 app.use("/", mainRouter);
