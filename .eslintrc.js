@@ -20,6 +20,7 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
+    "no-unused-vars": ["error", { argsIgnorePattern: "next" }],
     "no-console": ["warn", { allow: ["warn", "error"] }],
     camelcase: [
       "error",

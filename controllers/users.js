@@ -2,9 +2,12 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
-const handleControllerError = require("../utils/handleControllerError");
+const BadRequestError = require("../errors/BadRequestError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
+const NotFoundError = require("../errors/NotFoundError");
+const ConflictError = require("../errors/ConflictError");
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
 
   return User.findById(userId)
@@ -17,14 +20,18 @@ const getCurrentUser = (req, res) => {
         _id: user._id,
       });
     })
-    .catch((err) =>
-      handleControllerError(res, err, {
-        notFound: "User not found",
-      })
-    );
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return next(new BadRequestError("Invalid ID"));
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("User not found"));
+      }
+      return next(err);
+    });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   return bcrypt
@@ -45,15 +52,18 @@ const createUser = (req, res) => {
         _id: user._id,
       });
     })
-    .catch((err) =>
-      handleControllerError(res, err, {
-        validation: "Invalid data",
-        conflict: "User with this email already exists",
-      })
-    );
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return next(new BadRequestError("Invalid data"));
+      }
+      if (err.code === 11000) {
+        return next(new ConflictError("User with this email already exists"));
+      }
+      return next(err);
+    });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const userId = req.user._id;
   const { name, avatar } = req.body;
 
@@ -71,23 +81,22 @@ const updateUser = (req, res) => {
         _id: user._id,
       });
     })
-    .catch((err) =>
-      handleControllerError(res, err, {
-        validation: "Invalid data passed for update",
-        notFound: "User not found",
-      })
-    );
+    .catch((err) => {
+      if (err.name === "ValidationError") {
+        return next(new BadRequestError("Invalid data"));
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return next(new NotFoundError("User not found"));
+      }
+      return next(err);
+    });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return handleControllerError(
-      res,
-      Object.assign(new Error(), { name: "ValidationError" }),
-      { validation: "Email and password are required" }
-    );
+    return next(new BadRequestError("Email and password are required"));
   }
 
   return User.findUserByCredentials(email, password)
@@ -97,7 +106,12 @@ const login = (req, res) => {
       });
       res.status(200).send({ token });
     })
-    .catch((err) => handleControllerError(res, err));
+    .catch((err) => {
+      if (err.name === "AuthError") {
+        return next(new UnauthorizedError("Incorrect email or password"));
+      }
+      return next(err);
+    });
 };
 
 module.exports = {

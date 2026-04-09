@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
-const { NOT_FOUND_ERROR } = require("./utils/errors");
+const errorHandler = require("./middlewares/error-handler");
 
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
 const { PORT = 3001 } = process.env;
@@ -29,8 +29,11 @@ app.use("/", mainRouter);
 
 // 404 handler
 app.use((req, res) => {
-  res.status(NOT_FOUND_ERROR).send({ message: "Requested resource not found" });
+  res.status(404).send({ message: "Requested resource not found" });
 });
+
+// Error handler
+app.use(errorHandler);
 
 // Connect to DB
 mongoose
