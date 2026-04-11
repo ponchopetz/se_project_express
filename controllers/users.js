@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const { JWT_SECRET } = require("../utils/config");
 const BadRequestError = require("../errors/BadRequestError");
-const UnauthorizedError = require("../errors/UnauthorizedError");
 const NotFoundError = require("../errors/NotFoundError");
 const ConflictError = require("../errors/ConflictError");
 
@@ -106,12 +105,7 @@ const login = (req, res, next) => {
       });
       res.status(200).send({ token });
     })
-    .catch((err) => {
-      if (err.name === "AuthError") {
-        return next(new UnauthorizedError("Incorrect email or password"));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 
 module.exports = {

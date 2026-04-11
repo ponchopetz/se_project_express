@@ -3,16 +3,18 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const express = require("express");
 const cors = require("cors");
+const { errors } = require("celebrate");
 const mongoose = require("mongoose");
 const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/error-handler");
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const { MONGO_URL = "mongodb://127.0.0.1:27017/wtwr_db" } = process.env;
 const { PORT = 3001 } = process.env;
 
 const app = express();
 
-//Middlewares
+// Middlewares
 app.use(helmet());
 app.use(cors());
 const limiter = rateLimit({
@@ -24,8 +26,13 @@ app.use(limiter);
 
 app.use(express.json());
 
+app.use(requestLogger);
+
 // Routes
 app.use("/", mainRouter);
+
+app.use(errorLogger);
+app.use(errors());
 
 // 404 handler
 app.use((req, res) => {
