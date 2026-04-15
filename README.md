@@ -47,7 +47,7 @@ This project is a RESTful backend for the WTWR (What to Wear) application. It ma
 
 ## Project Pitch Video
 
-Check out [this video](https://www.loom.com/share/f1a3a3a7c6114a2195ba6cba20399667), where I describe my
+Check out [this video](https://www.loom.com/share/8a49b7a659fb44db8b65f783e5a336b1), where I describe my
 project and some challenges I faced while building it.
 
 ## Running the Project
