@@ -43,11 +43,6 @@ app.use("/", mainRouter);
 app.use(errorLogger);
 app.use(errors());
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).send({ message: "Requested resource not found" });
-});
-
 // Error handler
 app.use(errorHandler);
 

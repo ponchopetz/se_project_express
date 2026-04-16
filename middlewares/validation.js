@@ -19,6 +19,7 @@ module.exports.validateCardBody = celebrate({
       "string.empty": 'The "imageUrl" field must be filled in',
       "string.uri": 'The "imageUrl" field must be a valid URL',
     }),
+    weather: Joi.string().required().valid("hot", "warm", "cold"),
   }),
 });
 

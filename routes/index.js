@@ -17,4 +17,9 @@ router.use(auth);
 
 router.use("/users", usersRouter);
 
+// 404 handler — catches any request that didn't match a defined route
+router.use((req, res) => {
+  res.status(404).send({ message: "Requested resource not found" });
+});
+
 module.exports = router;
